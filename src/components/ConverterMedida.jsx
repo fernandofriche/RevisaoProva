@@ -117,3 +117,36 @@ export default function ConverterMedida() {
         </>
     );
             }
+
+
+fazer soma:
+import React, { useEffect, useState } from 'react';
+
+const SomaNumeros = () => {
+  const [numeros, setNumeros] = useState([]);
+  const [soma, setSoma] = useState(0);
+
+  useEffect(() => {
+    const fetchNumeros = async () => {
+      try {
+        const response = await fetch('https://sua-api.com/numeros.json');
+        const data = await response.json();
+        setNumeros(data);
+        const total = data.reduce((acc, num) => acc + num, 0);
+        setSoma(total);
+      } catch (error) {
+        console.error('Erro ao buscar os números:', error);
+      }
+    };
+
+    fetchNumeros();
+  }, []);
+
+  return (
+    <div>
+      <h1>Soma dos Números: {soma}</h1>
+    </div>
+  );
+};
+
+export default SomaNumeros;
