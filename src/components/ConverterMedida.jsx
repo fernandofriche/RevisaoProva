@@ -150,3 +150,96 @@ const SomaNumeros = () => {
 };
 
 export default SomaNumeros;
+
+
+Vamos revisar o código completo, agora com comentários detalhados e mostrando novamente como deve ser o arquivo `números.json`.
+
+### 1. **Arquivo `números.json`**
+
+Este é o arquivo JSON que será servido pela sua API:
+
+```json
+[
+  10,
+  20,
+  30,
+  40,
+  50
+]
+```
+
+Esse arquivo contém um array simples de números. A aplicação React irá buscar este arquivo, somar os valores, e exibir o resultado na tela.
+
+### 2. **Componente `SomaNumeros.js` Comentado**
+
+Aqui está o código React, agora com comentários para explicar cada parte:
+
+```javascript
+import React, { useEffect, useState } from 'react';
+
+const SomaNumeros = () => {
+  // Declara dois estados: 'numeros' para armazenar os números da API e 'soma' para armazenar a soma desses números.
+  const [numeros, setNumeros] = useState([]); // 'numeros' começa como um array vazio
+  const [soma, setSoma] = useState(0); // 'soma' começa como 0
+
+  // 'useEffect' é utilizado para realizar a chamada à API quando o componente é montado.
+  useEffect(() => {
+    // Função assíncrona para buscar os números da API
+    const fetchNumeros = async () => {
+      try {
+        // Faz uma requisição para obter o arquivo 'números.json'
+        const response = await fetch('http://localhost:3000/numeros.json');
+        const data = await response.json(); // Converte a resposta para JSON
+        setNumeros(data); // Armazena os números no estado 'numeros'
+        
+        // Calcula a soma de todos os números no array usando 'reduce'
+        const total = data.reduce((acc, num) => acc + num, 0);
+        setSoma(total); // Atualiza o estado 'soma' com o valor calculado
+      } catch (error) {
+        console.error('Erro ao buscar os números:', error); // Exibe um erro no console, se houver
+      }
+    };
+
+    fetchNumeros(); // Chama a função para buscar os números
+  }, []); // O array vazio significa que o efeito só roda quando o componente é montado
+
+  // Renderiza o resultado na tela
+  return (
+    <div>
+      <h1>Soma dos Números: {soma}</h1> {/* Exibe a soma dos números */}
+    </div>
+  );
+};
+
+export default SomaNumeros; // Exporta o componente para ser usado em outros arquivos
+```
+
+### **Explicação dos Componentes**
+
+- **`useState([])`**: Inicializa `numeros` como um array vazio. Após buscar os dados da API, esse array será preenchido com os números.
+- **`useState(0)`**: Inicializa `soma` como 0. Após calcular a soma dos números, `soma` será atualizado.
+- **`useEffect`**: Executa a função `fetchNumeros` quando o componente é montado, garantindo que a API seja chamada uma única vez.
+- **`fetchNumeros`**: Faz a requisição para a API, converte os dados para JSON, armazena os números em `numeros`, e calcula a soma usando o método `reduce`.
+- **`setSoma(total)`**: Atualiza o estado `soma` com o valor total da soma.
+- **`h1`**: Exibe o valor de `soma` na tela.
+
+### 3. **Arquivo `main.jsx`**
+
+Certifique-se de que o arquivo `main.jsx` está configurado para usar o componente `SomaNumeros`:
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SomaNumeros from './SomaNumeros'; // Importa o componente que criamos
+
+// Renderiza o componente SomaNumeros na aplicação
+ReactDOM.render(
+  <React.StrictMode>
+    <SomaNumeros />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+### **Resumo**
+Agora, com os comentários e o arquivo `números.json` mostrado, você tem um entendimento completo de como o projeto funciona. O arquivo JSON fornece os números, o componente React busca esses números, os soma e exibe o resultado na interface da aplicação.
